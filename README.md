@@ -107,7 +107,6 @@ python run_server.py
 
 
 
-
 ## Hardware
 
 <!-- ![2.9inch e-Paper Module](pic/eink.jpg) -->
