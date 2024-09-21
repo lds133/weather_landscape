@@ -69,6 +69,10 @@ The image generation code is written in [Python](https://www.python.org/) using 
 |![example](pic/test_09B0B1083315.bmp)| It will be cold and rainy throughout the day and night. The south wind will shift to the northeast overnight.|
 
 
+## How the landscape changed during the day
+
+![Dynamic](pic/dynamic.gif)
+
 
 
 ## Running the code
