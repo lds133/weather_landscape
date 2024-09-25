@@ -96,7 +96,9 @@ makevenv.bat
 
 #### Image creation test
 
-Update **OWM_KEY** variable in the weather_landscape.py file with your OpenWeather API key.
+Update **OWM_KEY** variable in the `secrets.py` with your OpenWeather API key.
+
+(optional) Change the coordinates in `secrets.py` to your location.
 
 ```
 python run_test.py
