@@ -6,6 +6,8 @@ from PIL import Image
 
 from http.server import HTTPServer, BaseHTTPRequestHandler
 
+import secrets
+
 from weather_landscape import WeatherLandscape
 
 
@@ -87,7 +89,7 @@ class WeatherLandscapeServer(BaseHTTPRequestHandler):
     def IndexHtml(self):
     
         body = '<h1>Weather as Landscape</h1>'
-        body+='<p>Place: '+("%.4f" % WEATHER.OWM_LAT) +' , '+("%.4f" % WEATHER.OWM_LON)+'</p>'
+        body+='<p>Place: '+("%.4f" % secrets.OWM_LAT) +' , '+("%.4f" % secrets.OWM_LON)+'</p>'
         body+='<p><img src="'+USERFILENAME+'" alt="Weather" "></p>'
         body+='<p>ESP32 URL: <span id="eink"></span></p>'
         body+='<script> document.getElementById("eink").innerHTML = window.location+"'+EINKFILENAME+'" ;</script>'

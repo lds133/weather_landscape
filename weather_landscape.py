@@ -11,17 +11,10 @@ from p_weather.openweathermap import OpenWeatherMap
 from p_weather.sprites import Sprites
 from p_weather.draw_weather import DrawWeather
 
+import secrets
+
 
 class WeatherLandscape:
-
-
-    OWM_KEY = None # your OpenWeather API key
-
-    # Warsaw
-    OWM_LAT = 52.196136
-    OWM_LON = 21.007963
-
-
 
     TMP_DIR = "tmp"
     OUT_FILENAME = "test_"
@@ -32,14 +25,14 @@ class WeatherLandscape:
 
 
     def __init__(self):
-        assert self.OWM_KEY!=None, "Set OWM_KEY variable to your OpenWeather API key"
+        assert secrets.OWM_KEY != "000000000000000000", "Set OWM_KEY variable to your OpenWeather API key in secrets.py"
         pass
 
 
 
 
     def MakeImage(self)->Image:
-        owm = OpenWeatherMap(self.OWM_KEY,self.OWM_LAT,self.OWM_LON,self.TMP_DIR)
+        owm = OpenWeatherMap(secrets.OWM_KEY,secrets.OWM_LAT,secrets.OWM_LON,self.TMP_DIR)
         owm.FromAuto()
 
         img = Image.open(self.TEMPLATE_FILENAME)
@@ -55,7 +48,7 @@ class WeatherLandscape:
 
     def SaveImage(self)->str:
         img = self.MakeImage() 
-        placekey = OpenWeatherMap.MakePlaceKey(self.OWM_LAT,self.OWM_LON)
+        placekey = OpenWeatherMap.MakePlaceKey(secrets.OWM_LAT,secrets.OWM_LON)
         outfilepath = self.TmpFilePath(self.OUT_FILENAME+placekey+self.OUT_FILEEXT)
         img.save(outfilepath) 
         return outfilepath
