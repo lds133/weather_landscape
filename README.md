@@ -52,13 +52,14 @@ The image generation code is written in [Python](https://www.python.org/) using 
 |![example](pic/house_00.png)| Current time position|
 |![example](pic/flower_00.png)| Midnight |
 |![example](pic/flower_01.png)| Midday |
-|![example](pic/palm_03.png)| South wind |
-|![example](pic/east_03.png)| East wind |
-|![example](pic/tree_03.png)| West wind |
-|![example](pic/pine_02.png)| North wind |
+|![example](pic/sprites_south.png)| South wind |
+|![example](pic/sprites_east.png)| East wind |
+|![example](pic/sprites_west.png)| West wind |
+|![example](pic/sprites_north.png)| North wind |
 |![example](pic/rain.png)| Rain|
+|![example](pic/snow.png)| Snow|
 
- 
+The taller the trees, the stronger the wind is expected to be. A mix of different tree types in the forest indicates an intermediate wind direction.
 
 ## Examples
 
