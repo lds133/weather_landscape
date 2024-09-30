@@ -8,6 +8,8 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 
 import secrets
 
+import socket
+
 from weather_landscape import WeatherLandscape
 
 
@@ -108,13 +110,21 @@ class WeatherLandscapeServer(BaseHTTPRequestHandler):
 
         
     
+#todo: implement support for multiple network interfaces
+def get_my_ips():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        s.connect(('8.8.8.8', 80)) 
+        yield s.getsockname()[0]  
+    finally:
+        s.close()
 
-
-
-
+    
+    
 
 httpd = HTTPServer((SERV_IPADDR,SERV_PORT),WeatherLandscapeServer)
-print(r"Serving at http://%s:%i/" % (SERV_IPADDR,SERV_PORT))
+for ip in get_my_ips():
+    print(r"Serving at http://%s:%i/" % (ip,SERV_PORT))
 httpd.serve_forever() 
 
 
