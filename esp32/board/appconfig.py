@@ -6,8 +6,8 @@ class AppConfig:
     VERSION = "1.0 OCT 2024" 
     
     PIN_CLK = 18
-    PIN_DIN = 23 # MISO
-    PIN_DOUT = 19 # MOSI, not used
+    PIN_DIN = 23 # MOSI
+    PIN_DOUT = 19 # MISO, not used
     PIN_CS = 5
     PIN_DC = 13
     PIN_RST = 12
