@@ -19,8 +19,8 @@ class EInk:
                     bits=8,
                     firstbit=0,
                     sck=Pin(appcfg.PIN_CLK),
-                    mosi=Pin(appcfg.PIN_DOUT),
-                    miso=Pin(appcfg.PIN_DIN))
+                    mosi=Pin(appcfg.PIN_DIN),
+                    miso=Pin(appcfg.PIN_DOUT))
         
         cs = Pin(appcfg.PIN_CS,Pin.OUT)
         dc = Pin(appcfg.PIN_DC,Pin.OUT)
