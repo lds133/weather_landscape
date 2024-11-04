@@ -43,23 +43,30 @@ class WeatherLandscapeServer(BaseHTTPRequestHandler):
            self.wfile.write(bytes(self.IndexHtml(), 'utf-8'))
            
            
+        databytes = None
+
         if (self.path.startswith('/'+EINKFILENAME)) or (self.path.startswith('/'+USERFILENAME)):
-        
             self.CreateWeatherImages() 
-        
-            databytes = bytearray()
             try:
+                file_name = WEATHER.TmpFilePath(self.path[1:])
+                f = open(file_name, "rb") 
+                databytes = f.read()               
+                f.close()
+
+            except Exception as e:
+                print("File read error:",str(e))
+                
+            if (databytes!=None):
+                self.send_response(200)
+                self.send_header("Content-type", "image/bmp")
+            else:
+                self.send_response(404)
+        else:
+            print("File not accessible")
+            self.send_response(403)
             
-               file_name = WEATHER.TmpFilePath(self.path[1:])
-               f = open(file_name, "rb") 
-               databytes = f.read()               
-               f.close()
-               self.send_response(200)
-               s.send_header("Content-type", "image/bmp")
-            except:
-               file_to_open = "File not found"
-               self.send_response(404)
-            self.end_headers()
+        self.end_headers()
+        if (databytes!=None):
             self.wfile.write(databytes)
 
 
