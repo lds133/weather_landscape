@@ -18,6 +18,7 @@ SERV_PORT = 3355
 
 EINKFILENAME = "test.bmp"
 USERFILENAME = "test1.bmp"
+FAVICON = "favicon.ico"
 
 FILETOOOLD_SEC = 60*10
 
@@ -27,6 +28,24 @@ WEATHER = WeatherLandscape()
 class WeatherLandscapeServer(BaseHTTPRequestHandler):
 
 
+    def do_GET_sendfile(self,filepath:str,mimo:str):
+        try:
+            f = open(filepath, "rb") 
+            databytes =  f.read()               
+            f.close()  
+        except Exception as e:
+            databytes = None
+            print("File read error '%s' :%s" % (filepath,str(e)))
+            
+        if (databytes!=None):
+            self.send_response(200)
+            self.send_header("Content-type", mimo)
+        else:
+            self.send_response(404)
+       
+        self.end_headers()
+        if (databytes!=None):
+            self.wfile.write(databytes)  
     
 
     def do_GET(self):
@@ -34,40 +53,29 @@ class WeatherLandscapeServer(BaseHTTPRequestHandler):
         if self.path == '/':
            self.path = '/index.html'
            
-           
         print("GET:",self.path)
+
+        if (self.path.startswith('/'+FAVICON)):
+            self.do_GET_sendfile(FAVICON,"image/ico")
+            return
+
            
         if (self.path.startswith('/index.html')):
            self.send_response(200)
            self.end_headers()
            self.wfile.write(bytes(self.IndexHtml(), 'utf-8'))
+           return
            
-           
-        databytes = None
 
         if (self.path.startswith('/'+EINKFILENAME)) or (self.path.startswith('/'+USERFILENAME)):
             self.CreateWeatherImages() 
-            try:
-                file_name = WEATHER.TmpFilePath(self.path[1:])
-                f = open(file_name, "rb") 
-                databytes = f.read()               
-                f.close()
-
-            except Exception as e:
-                print("File read error:",str(e))
-                
-            if (databytes!=None):
-                self.send_response(200)
-                self.send_header("Content-type", "image/bmp")
-            else:
-                self.send_response(404)
-        else:
-            print("File not accessible")
-            self.send_response(403)
+            file_name = WEATHER.TmpFilePath(self.path[1:])
+            self.do_GET_sendfile(file_name ,"image/bmp")
+            return
             
-        self.end_headers()
-        if (databytes!=None):
-            self.wfile.write(databytes)
+        print("Path not accessible:",self.path)
+        self.send_response(403)
+
 
 
     def IsFileTooOld(self, filename):
