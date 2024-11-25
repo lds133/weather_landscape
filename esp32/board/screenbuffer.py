@@ -12,13 +12,13 @@ class Screen:
 
 
     def __init__(self,appcfg):
+        print("Screen init")       
         self.BYTES_PER_LINE = int(appcfg.SCR_WIDTH / 8)
         self.bufsize = int(appcfg.SCR_WIDTH*appcfg.SCR_HEIGHT/8)
         self.clear()
         #self.bf = bitmapfont.BitmapFont(appcfg.SCR_WIDTH , appcfg.SCR_HEIGHT, self.set_pixel_v)
         self.bf = bitmapfont.BitmapFont(appcfg.SCR_HEIGHT, appcfg.SCR_WIDTH , self.set_pixel_h) 
         self.bf.init()
-        print(">>> *init")       
         
 
     def set_pixel_v(self,x,y):
@@ -38,22 +38,26 @@ class Screen:
         
         
     def print(self,text):
+         print("Screen text:",text)
          self.bf.text(text, self.x, self.y)
          self.x=0#self.bf.width(text)
          self.y+=self.bf.get_font_height()+1
-         print(">>>",text)
+         
          
         
         
     def printat(self,text,x,y):
+         print("Screen text:",text)
          self.bf.text(text, x, y)
-         print(">>>",text)
+         
+         
+         
          
     def clear(self):
         self.scrbuf = bytearray([0xFF] * self.bufsize  )
         self.x = 0
         self.y = 0
-        print(">>> *clear ")
+        print("Screen clear")       
         
         
     @property        

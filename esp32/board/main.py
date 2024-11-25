@@ -5,7 +5,7 @@ from led import Led,LedDummy
 from esp32_regs import GetResetCauseText
 
 import time
-from machine import deepsleep
+from machine import deepsleep,reset
 
 
 def print_message(text=None):
@@ -21,10 +21,16 @@ def print_message(text=None):
     led.blink()
 
 def print_error(text):
-    global error_count 
-    print_message("Error: %s (%i)" % (text,error_count))
+    global error_count
+    print_message("Error: %s  %i(%i)" % (text,error_count+1,cfg.ERROR_RETRY_COUNT))
+    if (error_count>=cfg.ERROR_RETRY_COUNT):
+        print("There are too many errors. Reset.")
+        reset()
+    error_sleep_sec = cfg.ERROR_RETRY_SEC[error_count]
     error_count+=1
-    time.sleep(cfg.ERROR_RETRY_SEC)
+    print("Sleep %i sec" % error_sleep_sec)
+    time.sleep(error_sleep_sec)
+    
     
 
 
@@ -40,12 +46,7 @@ print("------")
 #print_message(GetResetCauseText())
 #time.sleep(10)
 
-
-
-
-
 error_count = 0
-
 
 while (True):
     
@@ -54,20 +55,15 @@ while (True):
         print_error("WiFi connection failed.")
         continue
     
-    img = wlan.load()
-    if (img):
-        eink.show(img)
-    else:
-        print_error("Image load failed.")
+    try:
+        img = wlan.load()
+    except Exception as e:
+        print_error("Image load failed. "+str(e) )
         continue
-    
 
+    error_count = 0
+    assert img!=None
+    eink.show(img)
+    
+    print("Deep sleep %i sec" % (cfg.IMAGE_RELOAD_PERIOD_MS/1000))
     deepsleep(cfg.IMAGE_RELOAD_PERIOD_MS)
-
-
-
-
-    
-    
-    
-    

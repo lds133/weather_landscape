@@ -43,13 +43,19 @@ class WiFi:
     
     
     def load(self):
-        print("Loading "+self.cfg.URL)
         
         self.led.blink()
-        r = urequests.get(self.cfg.URL, headers={'accept': 'image/bmp'})
+        print("Loading "+self.cfg.URL)
+        try:
+            r = urequests.get(self.cfg.URL, headers={'accept': 'image/bmp'})
+            print("Image loaded")
+        finally:
+            self.led.off()            
     
-        if (r==None) or (r.content==None) or (len(r.content)<54):
-            return None
+        if (r==None) or (r.content==None):
+            raise Exception("Image file load error")
+        if (len(r.content)<54):
+            raise Exception("Image file too small")
     
         img_bytes = r.content
         start_pos = lebytes_to_int(img_bytes[10:14])
@@ -58,11 +64,9 @@ class WiFi:
         height = lebytes_to_int(img_bytes[22:26])
         
         if (width!=self.cfg.SCR_WIDTH) or (height!=self.cfg.SCR_HEIGHT):
-            print("Wrong image size",width,height)
+            raise Exception("Wrong image size %ix%i, expected %ix%i" % (width,height,self.cfg.SCR_WIDTH,self.cfg.SCR_HEIGHT))
         
-        print("Image loaded")
-        
-        self.led.off()
+
 
         return img_bytes[start_pos:]
             

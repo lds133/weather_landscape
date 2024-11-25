@@ -41,20 +41,23 @@ class EInk:
         self.show(self.scr.data)
         
         
-    def show(self,data):
+    def show(self,data)->bool: 
         isthesame = self.cmp.check(data)
         if (isthesame):
             print("EInk upadate skipped")
+            return False
         self.dev.set_frame_memory(data, 0, 0, self.cfg.SCR_WIDTH, self.cfg.SCR_HEIGHT)
         self.dev.display_frame()
+        return True
         
         
     def print(self,text):
         self.scr.print(text)
         
         
+        
     def printat(self,text,x,y):
-         self.scr.printat(text,x,y)
+        self.scr.printat(text,x,y)
         
         
         

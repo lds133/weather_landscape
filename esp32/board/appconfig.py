@@ -3,7 +3,7 @@ class AppConfig:
     
     TITLE = "WebFrame"
     
-    VERSION = "1.0 OCT 2024" 
+    VERSION = "1.1 NOV 2024" 
     
     PIN_CLK = 18
     PIN_DIN = 23 # MOSI
@@ -30,7 +30,8 @@ class AppConfig:
     
     URL = "<url that points to the bmp image>"
     
-    ERROR_RETRY_SEC = 30*60
+    ERROR_RETRY_SEC = [10,30,5*60,20*60,60*60]
+    ERROR_RETRY_COUNT = len(ERROR_RETRY_SEC)
     
     
     
