@@ -30,13 +30,23 @@ class WeatherInfo():
         else:
             self.clouds = 0
         
-        if ('rain' in fdata) and ('3h' in fdata['rain']):
-            self.rain = float(fdata['rain']['3h'])
+        if ('rain' in fdata) :
+            if ('3h' in fdata['rain']):
+                self.rain = float(fdata['rain']['3h'])
+            elif ('2h' in fdata['rain']):
+                self.rain = float(fdata['rain']['2h']) #todo: limit range
+            elif ('1h' in fdata['rain']):
+                self.rain = float(fdata['rain']['1h']) #todo: limit range
         else:
             self.rain = 0.0
 
-        if ('snow' in fdata) and ('3h' in fdata['snow']):
-            self.snow = float(fdata['snow']['3h'])
+        if ('snow' in fdata):
+            if ('3h' in fdata['snow']):
+                self.snow = float(fdata['snow']['3h'])
+            elif ('2h' in fdata['rain']):
+                self.snow = float(fdata['snow']['2h']) #todo: limit range
+            elif ('1h' in fdata['rain']):
+                self.snow = float(fdata['snow']['1h']) #todo: limit range
         else:
             self.snow = 0.0
 
