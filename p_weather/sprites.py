@@ -4,6 +4,8 @@ import random
 
 class Sprites():
 
+    DISABLED = -999999
+
     Black = 0
     White = 1
 
@@ -38,6 +40,9 @@ class Sprites():
         
 
     def Draw(self,name,index,xpos,ypos):
+
+        if (xpos<0) or (ypos<0):
+            return 0
 
         #print("DRAW '%s' #%i at %i,%i" % (name,index,xpos,ypos))
     
@@ -143,6 +148,7 @@ class Sprites():
         r = 1.0 - ( value / self.HEAVYRAIN ) / self.RAINFACTOR 
 
         for x in range(xpos,xpos+width):
+            
             for y in range(ypos,tline[x],2):
                 if (x>=self.w): 
                     continue

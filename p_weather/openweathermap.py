@@ -131,16 +131,19 @@ class OpenWeatherMap():
         return  OpenWeatherMap.MakeCoordinateKey(latitude) + OpenWeatherMap.MakeCoordinateKey(longitude)
 
     def FromWWW(self):
+    
         fjsontext = urlopen(self.URL_FOREAST).read()
-        ff = open(self.filename_forecast,"wb")
-        ff.write(fjsontext)
-        ff.close()
         fdata = json.loads(fjsontext)
+        ff = open(self.filename_forecast,"wb")
+        ff.write( json.dumps(fdata, indent=4).encode('utf-8',errors='ignore') )
+        ff.close()
+        
         cjsontext = urlopen(self.URL_CURR).read()
-        cf = open(self.filename_curr,"wb")
-        cf.write(cjsontext)
-        cf.close()
         cdata = json.loads(cjsontext)
+        cf = open(self.filename_curr,"wb")
+        cf.write( json.dumps(cdata, indent=4).encode('utf-8',errors='ignore') )
+        cf.close()
+        
         return self.FromJSON(cdata,fdata)
 
 
