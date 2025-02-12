@@ -58,8 +58,13 @@ The image generation code is written in [Python](https://www.python.org/) using 
 |![example](pic/sprites_north.png)| North wind |
 |![example](pic/rain.png)| Rain|
 |![example](pic/snow.png)| Snow|
+|![example](pic/pres_high.png)| High atmospheric pressure (1050 hpa)|
+|![example](pic/pres_norm.png)| Normal atmospheric pressure (1013 hpa) |
+|![example](pic/pres_low.png)| Low atmospheric pressure (980 hpa) |
 
 The taller the trees, the stronger the wind is expected to be. A mix of different tree types in the forest indicates an intermediate wind direction.
+
+
 
 ## Examples
 
