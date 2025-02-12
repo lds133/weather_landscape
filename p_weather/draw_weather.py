@@ -97,19 +97,21 @@ class DrawWeather():
         yclouds = int(ypos-self.YSTEP/2)
         f.Print()
 
-        self.sprite.Draw("house",xpos,0,oldy) 
+        self.sprite.Draw("house",0,xpos,oldy) 
         
+        print(">>",oldy)
         
         # convert pressure to smoke angle 
         STORMY_HPA = 980
         VERYDRY_HPA = 1050
         curr_hpa = owm.GetCurr().pressure
+        
         smokeangle_deg = ((curr_hpa - STORMY_HPA) / (VERYDRY_HPA-STORMY_HPA) )*85 + 5
         if (smokeangle_deg<0):
             smokeangle_deg=0
         if (smokeangle_deg>90):
             smokeangle_deg=90
-        self.sprite.DrawSmoke(xpos+21,33,smokeangle_deg)
+        self.sprite.DrawSmoke(xpos+21,self.picheight-oldy+23,smokeangle_deg)
         
         self.sprite.DrawInt(oldtemp,xpos+8,oldy+10)
         self.sprite.DrawCloud(f.clouds,xpos,yclouds,self.XSTART,self.YSTEP/2)
