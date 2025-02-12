@@ -45,7 +45,7 @@ class WeatherInfo():
                 self.snow = float(fdata['snow']['3h'])
             elif ('2h' in fdata['snow']):
                 self.snow = float(fdata['snow']['2h']) #todo: limit range
-            elif ('1h' in fdata['show']):
+            elif ('1h' in fdata['snow']):
                 self.snow = float(fdata['snow']['1h']) #todo: limit range
         else:
             self.snow = 0.0
@@ -62,6 +62,7 @@ class WeatherInfo():
 
 
         self.temp = float(fdata['main']['temp']) - WeatherInfo.KTOC
+        self.pressure = float(fdata['main']['pressure'])
 
 
     def Print(self):

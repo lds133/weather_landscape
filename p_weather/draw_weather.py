@@ -98,6 +98,19 @@ class DrawWeather():
         f.Print()
 
         self.sprite.Draw("house",xpos,0,oldy) 
+        
+        
+        # convert pressure to smoke angle 
+        STORMY_HPA = 980
+        VERYDRY_HPA = 1050
+        curr_hpa = owm.GetCurr().pressure
+        smokeangle_deg = ((curr_hpa - STORMY_HPA) / (VERYDRY_HPA-STORMY_HPA) )*85 + 5
+        if (smokeangle_deg<0):
+            smokeangle_deg=0
+        if (smokeangle_deg>90):
+            smokeangle_deg=90
+        self.sprite.DrawSmoke(xpos+21,33,smokeangle_deg)
+        
         self.sprite.DrawInt(oldtemp,xpos+8,oldy+10)
         self.sprite.DrawCloud(f.clouds,xpos,yclouds,self.XSTART,self.YSTEP/2)
         self.sprite.DrawRain(f.rain,xpos,yclouds,self.XSTART,tline)
@@ -180,13 +193,14 @@ class DrawWeather():
             if (tf<=t_noon) and (tf+dt>t_noon):
                 dx = self.TimeDiffToPixels(t_noon-tf)  - self.XSTEP/2
                 ix =int(xpos+dx)
-                self.sprite.Draw("flower",1,ix,tline[ix])
+                self.sprite.Draw("flower",1,ix,tline[ix]+1)
                 self.BlockRange(tline,ix-self.FLOWER_LEFT_PX,ix+self.FLOWER_RIGHT_PX)
+
 
             if (tf<=t_midn) and (tf+dt>t_midn):
                 dx = self.TimeDiffToPixels(t_midn-tf)  - self.XSTEP/2
                 ix =int(xpos+dx)
-                self.sprite.Draw("flower",0,ix,tline[ix])      
+                self.sprite.Draw("flower",0,ix,tline[ix]+1)      
                 self.BlockRange(tline,ix-self.FLOWER_LEFT_PX,ix+self.FLOWER_RIGHT_PX)
                     
 
@@ -233,6 +247,7 @@ class DrawWeather():
                 istmaxprinted = True
 
 
+            # todo: apply sprite line width 
             if not (f in f_used):
                 self.sprite.DrawWind(f.windspeed,f.winddeg,ix,tline)
                 self.sprite.DrawCloud(f.clouds,ix,yclouds,self.XSTEP,self.YSTEP/2)
