@@ -31,8 +31,8 @@ class WeatherLandscape:
 
 
 
-    def MakeImage(self)->Image:
-        owm = OpenWeatherMap(secrets.OWM_KEY,secrets.OWM_LAT,secrets.OWM_LON,self.TMP_DIR)
+    def MakeImage(self, fahrenheit=False)->Image:
+        owm = OpenWeatherMap(secrets.OWM_KEY,secrets.OWM_LAT,secrets.OWM_LON,self.TMP_DIR, fahrenheit)
         owm.FromAuto()
 
         img = Image.open(self.TEMPLATE_FILENAME)

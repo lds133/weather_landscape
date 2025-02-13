@@ -18,6 +18,8 @@ SERV_PORT = 3355
 
 EINKFILENAME = "test.bmp"
 USERFILENAME = "test1.bmp"
+EINKFILENAME_F = "test_f.bmp"
+USERFILENAME_F = "test1_f.bmp"
 FAVICON = "favicon.ico"
 
 FILETOOOLD_SEC = 60*10
@@ -50,6 +52,13 @@ class WeatherLandscapeServer(BaseHTTPRequestHandler):
 
     def do_GET(self):
         
+        fahrenheit = False
+        components = self.path.split('?')
+        if len(components) > 1:
+            self.path, query = components
+            if query == 'fahrenheit=true':
+                fahrenheit = True
+
         if self.path == '/':
            self.path = '/index.html'
            
@@ -63,19 +72,19 @@ class WeatherLandscapeServer(BaseHTTPRequestHandler):
         if (self.path.startswith('/index.html')):
            self.send_response(200)
            self.end_headers()
-           self.wfile.write(bytes(self.IndexHtml(), 'utf-8'))
+           self.wfile.write(bytes(self.IndexHtml(fahrenheit), 'utf-8'))
            return
            
 
-        if (self.path.startswith('/'+EINKFILENAME)) or (self.path.startswith('/'+USERFILENAME)):
-            self.CreateWeatherImages() 
+        if self.isImageRequest():
+            self.CreateWeatherImages()
             file_name = WEATHER.TmpFilePath(self.path[1:])
             self.do_GET_sendfile(file_name ,"image/bmp")
             return
             
         print("Path not accessible:",self.path)
         self.send_response(403)
-
+        self.end_headers()
 
 
     def IsFileTooOld(self, filename):
@@ -86,30 +95,48 @@ class WeatherLandscapeServer(BaseHTTPRequestHandler):
                     
         user_file_name = WEATHER.TmpFilePath(USERFILENAME)
         eink_file_name = WEATHER.TmpFilePath(EINKFILENAME)
+        user_file_name_f = WEATHER.TmpFilePath(USERFILENAME_F)
+        eink_file_name_f = WEATHER.TmpFilePath(EINKFILENAME_F)
        
         if not self.IsFileTooOld(user_file_name):
             return
        
-        img = WEATHER.MakeImage() 
-        img.save(user_file_name) 
+        # generate Celsius images
+        self.generateImages(user_file_name, eink_file_name)
+
+        # generate Fahrenheit images
+        self.generateImages(user_file_name_f, eink_file_name_f, True)
+
+
+    def generateImages(self, user_file_name, eink_file_name, fahrenheit=False):
+        img = WEATHER.MakeImage(fahrenheit)
+        img.save(user_file_name)
         
         img = img.rotate(-90, expand=True)   
         img = img.transpose(Image.FLIP_TOP_BOTTOM)  
         
-        img.save(eink_file_name) 
-        
-        
-        
-        
+        img.save(eink_file_name)
 
 
-    def IndexHtml(self):
+    def isImageRequest(self):
+        for filename in [EINKFILENAME, EINKFILENAME_F, USERFILENAME, USERFILENAME_F]:
+            if self.path.startswith('/' + filename):
+                return True
+        return False
+
+
+    def IndexHtml(self, fahrenheit=False):
+        filename = USERFILENAME
+        einkfilename = EINKFILENAME
+        if fahrenheit:
+            filename = USERFILENAME_F
+            einkfilename = EINKFILENAME_F
     
         body = '<h1>Weather as Landscape</h1>'
         body+='<p>Place: '+("%.4f" % secrets.OWM_LAT) +' , '+("%.4f" % secrets.OWM_LON)+'</p>'
-        body+='<p><img src="'+USERFILENAME+'" alt="Weather" "></p>'
+        body+='<p><img src="'+filename+'" alt="Weather" "></p>'
         body+='<p>ESP32 URL: <span id="eink"></span></p>'
-        body+='<script> document.getElementById("eink").innerHTML = window.location+"'+EINKFILENAME+'" ;</script>'
+        body+='<script> document.getElementById("eink").innerHTML = window.location.protocol+"//"+window.location.host+window.location.pathname+"'+einkfilename+'" ;</script>'
             
             
         return """

@@ -21,7 +21,7 @@ class WeatherInfo():
     FORECAST_PERIOD_HOURS = 3
 
 
-    def __init__(self,fdata):
+    def __init__(self,fdata, fahrenheight=False):
         self.t =  datetime.datetime.fromtimestamp(int(fdata['dt']))
         self.id = int(fdata['weather'][0]['id'])
 
@@ -60,8 +60,10 @@ class WeatherInfo():
         else:
             self.winddeg = 0.0
 
-
         self.temp = float(fdata['main']['temp']) - WeatherInfo.KTOC
+
+        if fahrenheight:
+            self.temp = self.temp * (9/5) + 32
 
 
     def Print(self):
@@ -92,10 +94,11 @@ class OpenWeatherMap():
     FILETOOOLD_SEC = 15*60 # 15 mins
     TOOMUCHTIME_SEC = 4*60*60 # 4 hours 
 
-    def __init__(self,apikey:str,latitude:float,longitude:float,rootdir:str=""):
+    def __init__(self,apikey:str,latitude:float,longitude:float,rootdir:str="",fahrenheight=False):
 
         self.latitude = latitude
         self.longitude = longitude
+        self.fahrenheight = fahrenheight
 
         reqstr = "lat=%.4f&lon=%.4f&mode=json&APPID=%s" % (self.LAT,self.LON,apikey)
         self.URL_FOREAST = self.OWMURL+"forecast?"+reqstr
@@ -169,14 +172,14 @@ class OpenWeatherMap():
     def FromJSON(self,data_curr,data_fcst):
         self.f = []
         cdata = data_curr
-        f = WeatherInfo(cdata)
+        f = WeatherInfo(cdata, self.fahrenheight)
         self.f.append(f)
         if not ('list' in data_fcst):
             return False
         for fdata in data_fcst['list']:
             if not WeatherInfo.Check(fdata):
                 continue
-            f = WeatherInfo(fdata)
+            f = WeatherInfo(fdata, self.fahrenheight)
             self.f.append(f)
         return True
 
