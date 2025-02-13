@@ -7,7 +7,7 @@ import os
 from PIL import Image
 
 
-from p_weather.openweathermap import OpenWeatherMap
+from p_weather.openweathermap import OpenWeatherMap,OpenWeatherMapSettings
 from p_weather.sprites import Sprites
 from p_weather.draw_weather import DrawWeather
 
@@ -32,7 +32,10 @@ class WeatherLandscape:
 
 
     def MakeImage(self)->Image:
-        owm = OpenWeatherMap(secrets.OWM_KEY,secrets.OWM_LAT,secrets.OWM_LON,self.TMP_DIR)
+    
+    
+        cfg = OpenWeatherMapSettings.Fill(secrets.OWM_KEY,secrets.OWM_LAT,secrets.OWM_LON,self.TMP_DIR,secrets.TEMPUNITS_MODE)
+        owm = OpenWeatherMap(cfg)
         owm.FromAuto()
 
         img = Image.open(self.TEMPLATE_FILENAME)

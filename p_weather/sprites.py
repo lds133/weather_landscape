@@ -75,33 +75,41 @@ class Sprites():
     DIGITMINUS = 11
     DIGITSEMICOLON = 12
 
-    def DrawInt(self,n,xpos,ypos,issign=True,isleadzero=False):
+    def DrawInt(self,n,xpos,ypos,issign=True,mindigits=1):
         if (n<0):
             sign = self.DIGITMINUS
         else:
             sign = self.DIGITPLAS
         n = round(n)
         n = abs(n)
-        n1 = n / 10
+        n0 = int( n / 100 )
+        n1 = int( (n % 100) / 10 )
         n2 = n % 10
         dx = 0
-        if (issign):
+        if (issign) or (sign == self.DIGITMINUS):
             w = self.Draw("digit",sign,xpos+dx,ypos)
             dx+=w+1
-        if (n1!=0) or (isleadzero):
+        if (n0!=0) or (mindigits>=3):
+            w = self.Draw("digit",n0,xpos+dx,ypos)
+            dx+=w+1
+        if (n1!=0) or (n0!=0)  or (mindigits>=2):
             w = self.Draw("digit",n1,xpos+dx,ypos)
             dx+=w+1
         w = self.Draw("digit",n2,xpos+dx,ypos)
         dx+=w+1
         return dx
+        
+        
+        
+        
 
     def DrawClock(self,xpos,ypos,h,m):
         dx=0
-        w = self.DrawInt(h,xpos+dx,ypos,False,True)
+        w = self.DrawInt(h,xpos+dx,ypos,False,2)
         dx+=w
         w = self.Draw("digit",self.DIGITSEMICOLON,xpos+dx,ypos)
         dx+=w
-        dx = self.DrawInt(m,xpos+dx,ypos,False,True)
+        dx = self.DrawInt(m,xpos+dx,ypos,False,2)
         dx+=w+1
         return dx
 

@@ -64,11 +64,16 @@ class DrawWeather():
             tline[x] = Sprites.DISABLED
             
 
+
+    def DrawTemperature(self,f:WeatherInfo,x:int,y:int):
+        self.sprite.DrawInt(f.PrintableTemperature,x,y+10,True,2)
+
+
     #todo: add thunderstorm
     #todo: add fog
 
 
-    def Draw(self,ypos,owm):
+    def Draw(self,ypos:int,owm:OpenWeatherMap):
 
 
         self.picheight = self.IMGHEIGHT
@@ -113,7 +118,7 @@ class DrawWeather():
             smokeangle_deg=90
         self.sprite.DrawSmoke(xpos+21,self.picheight-oldy+23,smokeangle_deg)
         
-        self.sprite.DrawInt(oldtemp,xpos+8,oldy+10)
+        self.DrawTemperature(f,xpos+8,oldy)
         self.sprite.DrawCloud(f.clouds,xpos,yclouds,self.XSTART,self.YSTEP/2)
         self.sprite.DrawRain(f.rain,xpos,yclouds,self.XSTART,tline)
         self.sprite.DrawSnow(f.snow,xpos,yclouds,self.XSTART,tline)
@@ -139,7 +144,6 @@ class DrawWeather():
             
             newtemp = f.temp
             newy = self.DegToPix(newtemp)
-            #self.sprite.DrawInt(newtemp,xpos,10)
             
             for i in range(n):
                 tline[xpos+i] = self.mybezier(xpos+i,xpos,oldy,xpos+n,newy)
@@ -210,12 +214,6 @@ class DrawWeather():
             tf += dt
         
 
-
-
-
-
-
- 
  
         istminprinted = False
         istmaxprinted = False
@@ -233,19 +231,14 @@ class DrawWeather():
             dx = self.TimeDiffToPixels(f.t-tf)  - self.XSTEP/2
             ix =int(xpos+dx)
             
-            #self.sprite.DrawInt(f.t.hour,ix,65)
-            #self.sprite.DrawInt(f.t.minute,ix,75)
-            
-            
             yclouds = int( ypos-self.YSTEP/2 )
             
-            
             if (f.temp==self.tmin) and (not istminprinted):
-                self.sprite.DrawInt(f.temp,xpos+n,tline0[xpos+n]+10)
+                self.DrawTemperature(f,xpos+n,tline0[xpos+n])
                 istminprinted = True
             
             if (f.temp==self.tmax) and (not istmaxprinted):
-                self.sprite.DrawInt(f.temp,xpos+n,tline0[xpos+n]+10)
+                self.DrawTemperature(f,xpos+n,tline0[xpos+n])
                 istmaxprinted = True
 
 
