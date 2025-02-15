@@ -34,7 +34,7 @@ class WeatherLandscape:
     def MakeImage(self)->Image:
     
     
-        cfg = OpenWeatherMapSettings.Fill(secrets.OWM_KEY,secrets.OWM_LAT,secrets.OWM_LON,self.TMP_DIR,secrets.TEMPUNITS_MODE)
+        cfg = OpenWeatherMapSettings.Fill( secrets, self.TMP_DIR )
         owm = OpenWeatherMap(cfg)
         owm.FromAuto()
 

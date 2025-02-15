@@ -6,34 +6,43 @@ from urllib.request import urlopen
 
 
 
-
 class OpenWeatherMapSettings():
 
     TEMP_UNITS_CELSIUS = 0 
     TEMP_UNITS_FAHRENHEIT = 1
+    PRESSURE_RAIN_HPA = 980
+    PRESSURE_FAIR_HPA = 1040
 
 
     def __init__(self):
-        self.apikey = None
-        self.latitude = None
-        self.longitude = None
+        self.OWM_KEY = None
+        self.OWM_LAT = None
+        self.OWM_LON = None
         self.rootdir = ''
-        self.tempunits = 0
+        self.TEMPUNITS_MODE = 0
+        self.PRESSURE_MIN = self.PRESSURE_RAIN_HPA
+        self.PRESSURE_MAX = self.PRESSURE_FAIR_HPA
 
 
     @staticmethod
-    def Fill(apikey:str,latitude:float,longitude:float,rootdir:str="",tempunits = 0):
+    def Fill(obj,rootdir:str):
         s = OpenWeatherMapSettings()
-        s.apikey = apikey
-        s.latitude = latitude
-        s.longitude = longitude
         s.rootdir = rootdir
-        s.tempunits = tempunits
+        print("Settings:")
+        for key in obj.__dict__.keys():
+            if not key.startswith('__'):
+                if key.upper() == key:
+                    val = obj.__dict__[key]
+                    setattr(s, key, val)
+                    print('  ',key,'=',val)
+                else:
+                    print('  ',key,'ignored')
         return s
+
         
     @property
     def IsCelsius(self):
-        return self.tempunits!=self.TEMP_UNITS_FAHRENHEIT
+        return self.TEMPUNITS_MODE!=self.TEMP_UNITS_FAHRENHEIT
 
 
 
@@ -144,12 +153,12 @@ class OpenWeatherMap():
 
     def __init__(self,cfg:OpenWeatherMapSettings):
         assert cfg!=None
-        assert cfg.latitude!=None
-        assert cfg.longitude!=None
-        assert cfg.apikey!=None
+        assert cfg.OWM_LAT!=None
+        assert cfg.OWM_LON!=None
+        assert cfg.OWM_KEY!=None
         
         self.cfg = cfg
-        reqstr = "lat=%.4f&lon=%.4f&mode=json&APPID=%s" % (self.LAT,self.LON,self.cfg.apikey)
+        reqstr = "lat=%.4f&lon=%.4f&mode=json&APPID=%s" % (self.LAT,self.LON,self.cfg.OWM_KEY)
         self.URL_FOREAST = self.OWMURL+"forecast?"+reqstr
         self.URL_CURR =  self.OWMURL+"weather?"+reqstr
         self.f = []
@@ -162,11 +171,11 @@ class OpenWeatherMap():
 
     @property
     def LAT(self)->float:
-        return self.cfg.latitude
+        return self.cfg.OWM_LAT
 
     @property
     def LON(self)->float:
-        return self.cfg.longitude
+        return self.cfg.OWM_LON
     
     @staticmethod
     def MakeCoordinateKey(p:float):

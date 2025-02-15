@@ -104,14 +104,10 @@ class DrawWeather():
 
         self.sprite.Draw("house",0,xpos,oldy) 
         
-        print(">>",oldy)
-        
+       
         # convert pressure to smoke angle 
-        STORMY_HPA = 980
-        VERYDRY_HPA = 1050
         curr_hpa = owm.GetCurr().pressure
-        
-        smokeangle_deg = ((curr_hpa - STORMY_HPA) / (VERYDRY_HPA-STORMY_HPA) )*85 + 5
+        smokeangle_deg = ((curr_hpa - owm.cfg.PRESSURE_MIN) / (owm.cfg.PRESSURE_MAX-owm.cfg.PRESSURE_MIN) )*85 + 5
         if (smokeangle_deg<0):
             smokeangle_deg=0
         if (smokeangle_deg>90):
