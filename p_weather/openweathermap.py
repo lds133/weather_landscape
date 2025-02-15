@@ -34,7 +34,10 @@ class OpenWeatherMapSettings():
                 if key.upper() == key:
                     val = obj.__dict__[key]
                     setattr(s, key, val)
-                    print('  ',key,'=',val)
+                    if (key=='OWM_KEY'):
+                        print('  ','OWM_KEY updated')
+                    else:
+                        print('  ',key,'=',val)
                 else:
                     print('  ',key,'ignored')
         return s
