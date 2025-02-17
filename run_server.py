@@ -75,6 +75,7 @@ class WeatherLandscapeServer(BaseHTTPRequestHandler):
             
         print("Path not accessible:",self.path)
         self.send_response(403)
+        self.end_headers()
 
 
 
