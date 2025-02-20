@@ -63,16 +63,21 @@ class WeatherInfo():
     FORECAST_PERIOD_HOURS = 3
 
 
-    def toCelsius(self,kelvin:float):
+    def toCelsius(self,kelvin:float)->float:
         return kelvin - self.KTOC
         
-    def toFahrenheit(self,kelvin:float):
+    def toFahrenheit(self,kelvin:float)->float:
         return (kelvin - self.KTOC) * 1.8 + 32
         
 
     @property
     def PrintableTemperature(self):
         return self.temp if self.iscelsius else self.temp_fahrenheit
+
+    @property
+    def IsCelsius(self)->bool:
+        return self.iscelsius
+
 
 
     def __init__(self,fdata,cfg:OpenWeatherMapSettings):

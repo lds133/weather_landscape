@@ -76,6 +76,7 @@ class Sprites():
     DIGITSEMICOLON = 12
 
     def DrawInt(self,n,xpos,ypos,issign=True,mindigits=1):
+        n = round(n)
         if (n<0):
             sign = self.DIGITMINUS
         else:
@@ -91,12 +92,22 @@ class Sprites():
             dx+=w+1
         if (n0!=0) or (mindigits>=3):
             w = self.Draw("digit",n0,xpos+dx,ypos)
-            dx+=w+1
+            dx+=w
+            if (n0!=1):
+                dx+=1
         if (n1!=0) or (n0!=0)  or (mindigits>=2):
+            if (n1==1):
+                dx -=1
             w = self.Draw("digit",n1,xpos+dx,ypos)
-            dx+=w+1
+            dx+=w
+            if (n1!=1):
+                dx+=1
+        if (n2==1):
+            dx -=1                
         w = self.Draw("digit",n2,xpos+dx,ypos)
-        dx+=w+1
+        dx+=w
+        if (n2!=1):
+            dx +=1                
         return dx
         
         

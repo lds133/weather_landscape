@@ -66,13 +66,16 @@ class DrawWeather():
 
 
     def DrawTemperature(self,f:WeatherInfo,x:int,y:int):
-        self.sprite.DrawInt(f.PrintableTemperature,x,y+10,True,2)
+        if (f.IsCelsius):
+            self.sprite.DrawInt(f.PrintableTemperature,x,y+10,True,2)
+        else:
+            self.sprite.DrawInt(f.PrintableTemperature,x,y+10,False,1)
+
+
 
 
     #todo: add thunderstorm
     #todo: add fog
-
-
     def Draw(self,ypos:int,owm:OpenWeatherMap):
 
 
