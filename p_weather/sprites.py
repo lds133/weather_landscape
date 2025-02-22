@@ -1,8 +1,11 @@
 import os
-from PIL import Image
+from PIL import Image, ImageOps
 import random
+import math
 
 class Sprites():
+
+    DISABLED = -999999
 
     Black = 0
     White = 1
@@ -37,13 +40,18 @@ class Sprites():
         self.pix[x,y] = color
         
 
-    def Draw(self,name,index,xpos,ypos):
+    def Draw(self,name,index,xpos,ypos,ismirror=False):
+
+        if (xpos<0) or (ypos<0):
+            return 0
 
         #print("DRAW '%s' #%i at %i,%i" % (name,index,xpos,ypos))
     
         imagefilename = "%s_%02i%s" % (name, index, self.ext)
         imagepath = os.path.join(self.dir,imagefilename) 
         img = Image.open(imagepath)
+        if (ismirror):
+            img = ImageOps.mirror(img)
         w, h = img.size
         pix = img.load()
         ypos -= h
@@ -67,33 +75,52 @@ class Sprites():
     DIGITMINUS = 11
     DIGITSEMICOLON = 12
 
-    def DrawInt(self,n,xpos,ypos,issign=True,isleadzero=False):
+    def DrawInt(self,n,xpos,ypos,issign=True,mindigits=1):
+        n = round(n)
         if (n<0):
             sign = self.DIGITMINUS
         else:
             sign = self.DIGITPLAS
         n = round(n)
         n = abs(n)
-        n1 = n / 10
+        n0 = int( n / 100 )
+        n1 = int( (n % 100) / 10 )
         n2 = n % 10
         dx = 0
-        if (issign):
+        if (issign) or (sign == self.DIGITMINUS):
             w = self.Draw("digit",sign,xpos+dx,ypos)
             dx+=w+1
-        if (n1!=0) or (isleadzero):
+        if (n0!=0) or (mindigits>=3):
+            w = self.Draw("digit",n0,xpos+dx,ypos)
+            dx+=w
+            if (n0!=1):
+                dx+=1
+        if (n1!=0) or (n0!=0)  or (mindigits>=2):
+            if (n1==1):
+                dx -=1
             w = self.Draw("digit",n1,xpos+dx,ypos)
-            dx+=w+1
+            dx+=w
+            if (n1!=1):
+                dx+=1
+        if (n2==1):
+            dx -=1                
         w = self.Draw("digit",n2,xpos+dx,ypos)
-        dx+=w+1
+        dx+=w
+        if (n2!=1):
+            dx +=1                
         return dx
+        
+        
+        
+        
 
     def DrawClock(self,xpos,ypos,h,m):
         dx=0
-        w = self.DrawInt(h,xpos+dx,ypos,False,True)
+        w = self.DrawInt(h,xpos+dx,ypos,False,2)
         dx+=w
         w = self.Draw("digit",self.DIGITSEMICOLON,xpos+dx,ypos)
         dx+=w
-        dx = self.DrawInt(m,xpos+dx,ypos,False,True)
+        dx = self.DrawInt(m,xpos+dx,ypos,False,2)
         dx+=w+1
         return dx
 
@@ -143,6 +170,7 @@ class Sprites():
         r = 1.0 - ( value / self.HEAVYRAIN ) / self.RAINFACTOR 
 
         for x in range(xpos,xpos+width):
+            
             for y in range(ypos,tline[x],2):
                 if (x>=self.w): 
                     continue
@@ -196,49 +224,112 @@ class Sprites():
 
     def DrawWind(self,speed,direction,xpos,tline):
             
-            list = []
+        list = []
 
-            self.DrawWind_dirsprite(direction,0,  "pine",list)
-            self.DrawWind_dirsprite(direction,90, "east",list)
-            self.DrawWind_dirsprite(direction,180,"palm",list)
-            self.DrawWind_dirsprite(direction,270,"tree",list)
+        self.DrawWind_dirsprite(direction,0,  "pine",list)
+        self.DrawWind_dirsprite(direction,90, "east",list)
+        self.DrawWind_dirsprite(direction,180,"palm",list)
+        self.DrawWind_dirsprite(direction,270,"tree",list)
 
-            random.shuffle(list)
+        random.shuffle(list)
 
-            windindex = None
-            if   (speed<=0.4):
-                windindex = []
-            elif (speed<=0.7):
-                windindex = [0]
-            elif (speed<=1.7):
-                windindex = [1,0,0]
-            elif (speed<=3.3):
-                windindex = [1,1,0,0]
-            elif (speed<=5.2):
-                windindex = [1,2,0,0]
-            elif (speed<=7.4):
-                windindex = [1,2,2,0]
-            elif (speed<=9.8):
-                windindex = [1,2,3,0]
-            elif (speed<=12.4):
-                windindex = [2,2,3,0]            
-            else:
-                windindex = [3,3,3,3]    
-            
-            
-            if (windindex!=None):
-                ix = int(xpos)
-                random.shuffle(windindex)
-                j=0
-                #print("wind>>>",direction,speed,list,windindex);
-                for i in windindex:
-                    offset = ix+5
-                    if (offset>=len(tline)):
-                        break
-                    self.Draw(list[j],i,ix,tline[offset]+1) 
-                    ix+=9
-                    j+=1
+        windindex = None
+        if   (speed<=0.4):
+            windindex = []
+        elif (speed<=0.7):
+            windindex = [0]
+        elif (speed<=1.7):
+            windindex = [1,0,0]
+        elif (speed<=3.3):
+            windindex = [1,1,0,0]
+        elif (speed<=5.2):
+            windindex = [1,2,0,0]
+        elif (speed<=7.4):
+            windindex = [1,2,2,0]
+        elif (speed<=9.8):
+            windindex = [1,2,3,0]
+        elif (speed<=12.4):
+            windindex = [2,2,3,0]            
+        else:
+            windindex = [3,3,3,3]    
+        
+        if (windindex!=None):
+            ix = int(xpos)
+            random.shuffle(windindex)
+            j=0
+            #print("wind>>>",direction,speed,list,windindex);
+            for i in windindex:
+
+                xx  = ix + random.randint(-1, 1)
+                ismirror = random.random() < 0.5
+                offset = xx+5
+
+                if (offset>=len(tline)):
+                    break
                 
+                if (ismirror):
+                    xx -= 16
+
+                self.Draw(list[j],i,xx,tline[offset]+1,ismirror) 
+                ix+=9
+                j+=1
+            
+
+
+
+    SMOKE_R_PX = 30
+    PERSENT_DELTA = 4
+    SMOKE_SIZE = 60
+
+    
+
+    def DrawSmoke_makeline(self,angle_deg):
+        a = (math.pi  * angle_deg) / 180
+        r = self.SMOKE_R_PX
+        k = r * math.sin(a) / ( math.sqrt( ( r * math.cos(a) )) ) 
+        yp = 0
+        dots=[]
+        for x in range(0,self.w):
+            y = int( k * math.sqrt(x) )
+            if (y>self.h):
+                y = self.h
+            yi = yp
+            while(True):
+                rr = math.sqrt( x*x + yi*yi )
+                dots.append( [x,yi,rr] )
+                if (rr>self.SMOKE_SIZE):
+                    return dots
+                yi+=1
+                if (yi>=y):
+                    yp = y
+                    break
+
+    
+    
+
+
+    def DrawSmoke(self,x0,y0,persent):
+        dots = self.DrawSmoke_makeline(persent)
+        for d in dots:
+            x = d[0]
+            y = d[1]
+            r = d[2]
+            if random.random()*1.3 > (r/self.SMOKE_SIZE):
+                if random.random()*1.2 < (r/self.SMOKE_SIZE):
+                    dx = random.randint(-1, 1)
+                    dy = random.randint(-1, 1)
+                else:
+                    dx = 0
+                    dy = 0
+                    
+                self.Dot(x0+x+dx, self.h-(y0+y)+dy,self.Black)
+
+
+        
+    
+    
+
+
 
 
 if __name__ == "__main__":  
