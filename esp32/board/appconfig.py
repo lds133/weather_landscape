@@ -3,7 +3,7 @@ class AppConfig:
     
     TITLE = "WebFrame"
     
-    VERSION = "1.1 NOV 2024" 
+    VERSION = "1.2 MAR 2025" 
     
     PIN_CLK = 18
     PIN_DIN = 23 # MOSI
@@ -17,6 +17,7 @@ class AppConfig:
     
     
     IMAGE_RELOAD_PERIOD_MS = 15*60*1000
+    IMAGE_RELOAD_TIMEOUT_MS = 60*60*1000
 
 
     SCR_WIDTH = 128
