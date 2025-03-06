@@ -17,7 +17,7 @@ def print_message(text=None):
     if (text):
         eink.print("")
         eink.print(text)
-    eink.update()
+    eink.update(True)
     led.blink()
 
 def print_error(text):
@@ -50,15 +50,23 @@ error_count = 0
 
 while (True):
     
-    rc = wlan.connect()
+    
+    errortext = ""
+    try:
+        rc = wlan.connect()
+    except Exception as e:
+        errortext = str(e)
+        rc=False
+
+   
     if (not rc):
-        print_error("WiFi connection failed.")
+        print_error("WiFi connection failed."+errortext)
         continue
     
     try:
         img = wlan.load()
     except Exception as e:
-        print_error("Image load failed. "+str(e) )
+        print_error("\n  Image load failed.\n  "+str(e)+"\n" )
         continue
 
     error_count = 0

@@ -25,13 +25,15 @@ class Screen:
         pos = self.BYTES_PER_LINE*y
         pos+= int(x / 8)
         mask = 1 << (7-(x % 8))
-        self.scrbuf[pos] &= bit_not(mask)
+        if (pos<len(self.scrbuf)):
+            self.scrbuf[pos] &= bit_not(mask)
         
     def set_pixel_h(self,x,y):
         pos = self.BYTES_PER_LINE*x + (self.BYTES_PER_LINE-1)
         pos -=int( y/8 )
         mask = 1 << (y % 8)
-        self.scrbuf[pos] &= bit_not(mask)
+        if (pos<len(self.scrbuf)):
+            self.scrbuf[pos] &= bit_not(mask)
         #self.scrbuf[pos] = 0
         
         
@@ -39,9 +41,11 @@ class Screen:
         
     def print(self,text):
          print("Screen text:",text)
-         self.bf.text(text, self.x, self.y)
-         self.x=0#self.bf.width(text)
-         self.y+=self.bf.get_font_height()+1
+         lines = text.split('\n')
+         for line in lines:
+             self.bf.text(line, self.x, self.y)
+             self.x=0#self.bf.width(text)
+             self.y+=self.bf.get_font_height()+1
          
          
         

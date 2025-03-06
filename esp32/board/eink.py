@@ -37,13 +37,13 @@ class EInk:
     def clear(self):
         self.scr.clear()        
         
-    def update(self):
-        self.show(self.scr.data)
+    def update(self,isforceupdate=False):
+        self.show(self.scr.data,isforceupdate)
         
         
-    def show(self,data)->bool: 
+    def show(self,data,isforceupdate=False)->bool: 
         isthesame = self.cmp.check(data)
-        if (isthesame):
+        if (isthesame) and (not isforceupdate):
             print("EInk upadate skipped")
             return False
         self.dev.set_frame_memory(data, 0, 0, self.cfg.SCR_WIDTH, self.cfg.SCR_HEIGHT)
