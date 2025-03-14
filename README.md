@@ -72,7 +72,7 @@ The taller the trees, the stronger the wind is expected to be. A mix of differen
 |----------|------------|
 |![example](pic/weather_test.bmp)| It’s around noon, with clear skies and a few clouds expected. A moderate north wind will develop overnight. Temperatures are currently rising but will begin to fall after sunset, reaching their lowest point before sunrise. During this time, the wind is expected to shift to the northeast.|
 |![example](pic/test_20240903_043826.bmp)| The sun is rising and it will be a hot sunny day with a light southeast breeze. The temperature will remain high even after sunset, and the wind will shift to the east, becoming stronger throughout the evening.|
-|![example](pic/test_09B0B1083315.bmp)| It will be cold and rainy throughout the day and night. The south wind will shift to the northeast overnight.|
+|![example](pic/test_09B0B1083315.bmp)| It will be cold and rainy throughout the day and night. The south wind will shift to the northwest overnight.|
 
 
 ## How the landscape changed during the day
