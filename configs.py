@@ -57,3 +57,25 @@ class WLConfig_RGB_Black(WLConfig_RGB_White):
     COLOR_FG =     (255,255,255)
     COLOR_RAIN = (122, 213, 255)
     COLOR_SNOW = (255,255,255)    
+
+# ── Fahrenheit variants ──────────────────────────────────────────────────
+
+class WLConfig_BW_F(WLConfig_BW):
+    TITLE = "BW °F"
+    TEMPUNITS_MODE = 1
+
+class WLConfig_EINK_F(WLConfig_EINK):
+    TITLE = "BW EINK °F"
+    TEMPUNITS_MODE = 1
+
+class WLConfig_BWI_F(WLConfig_BWI):
+    TITLE = "BW inverted °F"
+    TEMPUNITS_MODE = 1
+
+class WLConfig_RGB_White_F(WLConfig_RGB_White):
+    TITLE = "Color °F, white BG"
+    TEMPUNITS_MODE = 1
+
+class WLConfig_RGB_Black_F(WLConfig_RGB_Black):
+    TITLE = "Color °F, black BG"
+    TEMPUNITS_MODE = 1
