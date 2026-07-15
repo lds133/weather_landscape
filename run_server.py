@@ -24,6 +24,12 @@ WEATHERS = [    WeatherLandscape(WLConfig_BW())          ,
                 WeatherLandscape(WLConfig_EINK())        ,
                 WeatherLandscape(WLConfig_RGB_Black())   ,
                 WeatherLandscape(WLConfig_RGB_White())   ,
+                # ── Fahrenheit variants ──
+                WeatherLandscape(WLConfig_BW_F())        ,
+                WeatherLandscape(WLConfig_BWI_F())       ,
+                WeatherLandscape(WLConfig_EINK_F())      ,
+                WeatherLandscape(WLConfig_RGB_Black_F()) ,
+                WeatherLandscape(WLConfig_RGB_White_F()) ,
                 ]
                 
 
