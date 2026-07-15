@@ -14,6 +14,13 @@ cfgs =  [
          
           WLConfig_RGB_Black(),          
           WLConfig_RGB_White(),
+
+          # ── Fahrenheit variants ──
+          WLConfig_BW_F(),
+          WLConfig_BWI_F(),
+          WLConfig_EINK_F(),
+          WLConfig_RGB_Black_F(),
+          WLConfig_RGB_White_F(),
           ]
           
 
